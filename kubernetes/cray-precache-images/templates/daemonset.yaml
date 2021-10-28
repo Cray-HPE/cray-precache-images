@@ -25,8 +25,9 @@ spec:
         sidecar.istio.io/inject: "false"
     spec:
       containers:
-      - name: cache-images 
-        image: {{ include "cray-precache-images.image-prefix" . }}{{ .Values.alpineImage }}
+      - name: cache-images
+        image: {{ .Values.image.alpine.repository }}:{{ .Values.image.alpine.tag }}
+        imagePullPolicy: {{ .Values.image.alpine.pullPolicy }}
         command:
            - /bin/sh
            - -c

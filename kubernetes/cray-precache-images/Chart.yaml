@@ -1,7 +1,28 @@
 #
-# Copyright 2020 Hewlett Packard Enterprise Development LP
+# Copyright 2021 Hewlett Packard Enterprise Development LP
 #
-apiVersion: v1
+apiVersion: v2
 name: cray-precache-images
-description: Cache nexus and other images across worker nodes
 version: 0.3.0
+description: Cache nexus and other images across worker nodes
+keywords:
+  - precache-images
+  - precache
+  - images
+annotations:
+  artifacthub.io/changes: |
+    - kind: security
+      description: Updated images to CSM patched versions
+      links:
+        - name: Github Issue
+          url: https://github.com/Cray-HPE/cray-precache-images/issues/4
+        - name: Github PR
+          url: https://github.com/Cray-HPE/cray-precache-images/pull/3
+  artifacthub.io/images: |
+    - name: nexus3
+      image: artifactory.algol60.net/csm-docker/stable/docker.io/sonatype/nexus3:3.25.0
+    - name: pause
+      image: artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/pause:3.1
+    - name: alpine
+      image: artifactory.algol60.net/csm-docker/stable/docker.io/library/alpine:3.12
+  artifacthub.io/license: MIT
