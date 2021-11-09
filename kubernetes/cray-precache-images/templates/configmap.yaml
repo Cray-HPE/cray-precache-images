@@ -6,6 +6,8 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: cray-precache-images
+  labels:
+    app.kubernetes.io/name: {{ include "cray-precache-images.name" . }}
 data:
   images_to_cache: |-
     {{- range $image := .Values.cacheImages }}
