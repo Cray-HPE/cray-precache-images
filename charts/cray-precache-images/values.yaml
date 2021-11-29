@@ -4,9 +4,7 @@
 # These are the images that will be pre-cached, this is an example
 # and will be overridden in manifest:
 #
-cacheImages:
-  - artifactory.algol60.net/csm-docker/stable/docker.io/sonatype/nexus3:3.25.0
-  - artifactory.algol60.net/csm-docker/stable/k8s.gcr.io/pause:3.1
+cacheImages: []
 
 #
 # Amount of time in seconds between cache refresh
@@ -19,6 +17,6 @@ podAnnotations: {}
 
 image:
   alpine:
-    repository: artifactory.algol60.net/csm-docker/stable/docker.io/library/alpine
-    tag: 3.12
+    repository: alpine
+    tag: 3.14
     pullPolicy: Always
