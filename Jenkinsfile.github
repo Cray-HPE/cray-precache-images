@@ -12,7 +12,7 @@ pipeline {
 
     environment {
         NAME = "cray-precache-images"
-        DESCRIPTION = "Helm chart to deploy node-problem-detector to Cray system."
+        DESCRIPTION = "Deploys a tool to cache some images on the system."
         IS_STABLE = getBuildIsStable()
     }
 
