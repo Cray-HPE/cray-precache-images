@@ -26,8 +26,8 @@ spec:
     spec:
       containers:
       - name: cache-images
-        image: {{ .Values.image.alpine.repository }}:{{ .Values.image.alpine.tag }}
-        imagePullPolicy: {{ .Values.image.alpine.pullPolicy }}
+        image: {{ .Values.image.repository }}:{{ .Values.image.tag }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
         command:
            - /bin/sh
            - -c

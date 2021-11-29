@@ -16,7 +16,6 @@ fullnameOverride: ""
 podAnnotations: {}
 
 image:
-  alpine:
-    repository: alpine
-    tag: 3.14
-    pullPolicy: Always
+  repository: alpine
+  tag: 3.14
+  pullPolicy: IfNotPresent
