@@ -1,0 +1,42 @@
+---
+# 'wait' job that waits for all cray-precache-images stateful set pods
+# to be ready given there can be some churn across cray-precache-images
+# cluster members as the cluster enters a steady state.
+#
+# If the 'size' of the cray-precache-images CR is modified, the NEED_CNT
+# will also need to be updated.
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: wait-for-cray-precache-images-pods
+  labels:
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-delete-policy: hook-succeeded,before-hook-creation
+spec:
+  template:
+    metadata:
+      name: wait-for-cray-precache-images-pods
+      labels:
+        app.kubernetes.io/managed-by: {{ .Release.Service }}
+      annotations:
+        sidecar.istio.io/inject: "false"
+    spec:
+      restartPolicy: Never
+      serviceAccountName: cray-precache-images-jobs
+      containers:
+        - name: wait
+          image: {{ .Values.kubectl.image.repository }}:{{ .Values.kubectl.image.tag }}
+          imagePullPolicy: {{ .Values.kubectl.image.pullPolicy }}
+          command:
+            - '/bin/sh'
+          args:
+            - '-c'
+            - 'SLEEP=10; ITER=90; for i in `seq 1 $ITER`; do NEED_CNT=$(kubectl get daemonset -n $MY_POD_NAMESPACE cray-precache-images -o json | jq ".status.currentNumberScheduled"); READY_CNT=$(kubectl get daemonset -n $MY_POD_NAMESPACE cray-precache-images -o json | jq ".status.numberReady"); [ "$READY_CNT" -eq "$NEED_CNT" ] && break; echo "[Attempt:${i}] Waiting for cray-precache-images pods to be RUNNING (${READY_CNT}/${NEED_CNT}), sleeping $SLEEP seconds."; sleep $SLEEP; done; echo "*** cray-precache-images PODS RUNNING ***"'
+          env:
+            - name: MY_POD_NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
