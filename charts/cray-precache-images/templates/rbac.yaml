@@ -21,18 +21,30 @@ OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 OTHER DEALINGS IN THE SOFTWARE.
 */}}
+# Job support
 apiVersion: v1
-kind: ConfigMap
+kind: ServiceAccount
 metadata:
-  name: cray-precache-images
-data:
-  images_to_cache: |-
-    {{- range $image := .Values.cacheImages }}
-    {{- $image | nindent 4 }}
-    {{- end }}
-
-  cache_refresh_seconds: |
-    {{ .Values.cacheRefreshSeconds }}
-
-  cache_images.sh: |-
-    {{- .Files.Get "files/cache_images.sh" | nindent 4 }}
+  name: cray-precache-images-jobs
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: cray-precache-images-jobs-role
+rules:
+- apiGroups: ["apps"]
+  resources: ["daemonsets"]
+  verbs: ["get", "list"]
+---
+kind: RoleBinding
+apiVersion: rbac.authorization.k8s.io/v1
+metadata:
+  name: cray-precache-images-jobs-role-binding
+subjects:
+- kind: ServiceAccount
+  name: cray-precache-images-jobs
+  namespace: {{ .Release.Namespace }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: cray-precache-images-jobs-role
