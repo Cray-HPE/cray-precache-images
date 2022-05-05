@@ -43,6 +43,7 @@ spec:
       annotations:
         {{- include "cray-precache-images.pod-annotations" . | nindent 8 }}
         sidecar.istio.io/inject: "false"
+        releaseTime: {{ dateInZone "2006-01-02 15:04:05Z" (now) "UTC"| quote }}
     spec:
       containers:
       - name: cache-images

@@ -51,7 +51,7 @@ spec:
             - '/bin/sh'
           args:
             - '-c'
-            - 'SLEEP=10; ITER=90; for i in `seq 1 $ITER`; do NEED_CNT=$(kubectl get daemonset -n $MY_POD_NAMESPACE cray-precache-images -o json | jq ".status.currentNumberScheduled"); READY_CNT=$(kubectl get daemonset -n $MY_POD_NAMESPACE cray-precache-images -o json | jq ".status.numberReady"); [ "$READY_CNT" -eq "$NEED_CNT" ] && break; echo "[Attempt:${i}] Waiting for cray-precache-images pods to be RUNNING (${READY_CNT}/${NEED_CNT}), sleeping $SLEEP seconds."; sleep $SLEEP; done; echo "*** cray-precache-images PODS RUNNING ***"'
+            - kubectl rollout status daemonset -n $MY_POD_NAMESPACE cray-precache-images
           env:
             - name: MY_POD_NAMESPACE
               valueFrom:
