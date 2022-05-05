@@ -23,7 +23,7 @@
 #
 apiVersion: v2
 name: cray-precache-images
-version: 0.5.0
+version: 0.5.1
 description: Cache nexus and other images across worker nodes
 keywords:
   - precache-images
@@ -42,7 +42,7 @@ annotations:
           url: https://github.com/Cray-HPE/cray-precache-images/pull/3
   artifacthub.io/images: |
     - name: alpine
-      image: alpine:3.14
+      image: artifactory.algol60.net/csm-docker/stable/docker.io/library/alpine:3.15
     - name: docker-kubectl
       image: artifactory.algol60.net/csm-docker/stable/docker-kubectl:1.19.15
   artifacthub.io/license: MIT
