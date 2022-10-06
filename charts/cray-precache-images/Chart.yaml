@@ -23,7 +23,7 @@
 #
 apiVersion: v2
 name: cray-precache-images
-version: 0.5.1
+version: 0.5.2
 description: Cache nexus and other images across worker nodes
 keywords:
   - precache-images
