@@ -1,0 +1,23 @@
+name: Run Api Checker
+on:
+  pull_request:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+jobs:
+  k8s-api-checker:
+    runs-on: ubuntu-20.04
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Check for removed and deprecated api usage
+        uses: Cray-HPE/.github/actions/csm-k8s-api-checker@v0-csm-k8s-api-checker
+        with:
+          prerequisite: |
+            helm template --generate-name --dry-run charts/cray-precache-images > cray-precache-images.yaml
+            sed -i.orig -e 's/release-name-//g' cray-precache-images.yaml
+            rm *.orig
