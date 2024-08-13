@@ -1,0 +1,40 @@
+@Library('csm-shared-library') _
+
+pipeline {
+    agent {
+        label "metal-gcp-builder"
+    }
+
+    options {
+        buildDiscarder(logRotator(numToKeepStr: "10"))
+        timestamps()
+    }
+
+    environment {
+        IMAGE_NAME = "cray-crictl"
+        NAME = "cray-precache-images"
+        DESCRIPTION = "Deploys a tool to cache some images on the system."
+        IS_STABLE = getBuildIsStable()
+        IMAGE_VERSION = getDockerBuildVersion(isStable: env.IS_STABLE)
+    }
+
+    stages {
+        stage("Build") {
+            environment {
+                CHART_VERSIONS = getChartVersion(name: "cray-precache-images", chartDirectory: "charts", isStable: env.IS_STABLE)
+            }
+            steps {
+                sh "make"
+            }
+        }
+
+        stage('Publish ') {
+            steps {
+                script {
+                    publishCsmDockerImage(image: env.IMAGE_NAME, tag: env.IMAGE_VERSION, isStable: env.IS_STABLE)
+                    publishCsmHelmCharts(component: env.NAME, chartsPath: "${WORKSPACE}/packages", isStable: env.IS_STABLE)
+                }
+            }
+        }
+    }
+}
