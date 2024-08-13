@@ -58,20 +58,16 @@ spec:
            - -c
            - "while true; do echo $(date -u); /scripts/cache_images.sh; echo ''; sleep $(cat /scripts/cache_refresh_seconds); done"
         volumeMounts:
-        - name: crictl
-          mountPath: /usr/local/bin
         - name: cache-images-script
           mountPath: /scripts
-        - name: containerd
-          mountPath: /var/run
+        - name: crictl-sock
+          mountPath: /run/containerd/containerd.sock
       volumes:
-      - name: crictl
-        hostPath:
-          path: /usr/local/bin
       - name: cache-images-script
         configMap:
           name: cray-precache-images
           defaultMode: 0744
-      - name: containerd
+      - name: crictl-sock
         hostPath:
-          path: /var/run
+          path: /run/containerd/containerd.sock
+          type: Socket
