@@ -14,6 +14,7 @@ jobs:
       lint-charts: ${{ github.event_name == 'pull_request' }}
       test-charts: false
       scan-chart-snyk-args: "--severity-threshold=high"
+      scan-image-snyk-args: "--severity-threshold=critical"
     secrets:
       snyk-token: ${{ secrets.SNYK_TOKEN }}
       github-token: ${{ secrets.GITHUB_TOKEN }}
